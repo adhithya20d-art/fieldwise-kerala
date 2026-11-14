@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FieldWise Kerala</title>
+<style>
+:root{--green:#236b45;--pale:#eef7ef;--ink:#203126}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f5;color:var(--ink);line-height:1.5}
+header{background:var(--green);color:white;padding:24px 18px;text-align:center}
+header h1{margin:0 0 6px;font-size:27px}header p{margin:0}
+main{max-width:850px;margin:22px auto;padding:0 14px}
+.card{background:white;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 10px #183b2012}
+h2{font-size:20px;margin:0 0 12px;color:var(--green)}
+label{display:block;font-weight:600;margin:12px 0 5px}
+input,select,button{font:inherit;padding:11px;border:1px solid #cbd8cd;border-radius:8px;width:100%;background:white}
+button{background:var(--green);color:white;border:0;font-weight:700;margin-top:14px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.result{background:var(--pale);padding:12px;border-radius:9px;margin-top:10px}
+small,.muted{color:#5b6b60}
+.lang{max-width:150px;margin:12px auto 0}
+a{color:var(--green)}
+footer{text-align:center;padding:20px;color:#637168;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h1 id="title">FieldWise Kerala</h1>
+<p id="subtitle">Explore crop rotation ideas using NASA Earth observation data</p>
+<select class="lang" id="language" aria-label="Language" onchange="setLanguage()">
+<option value="en">English</option><option value="ml">മലയാളം</option>
+</select>
+</header>
+<main>
+<section class="card">
+<h2 id="weatherTitle">Local weather from NASA POWER</h2>
+<p id="weatherIntro">Enter your farm location coordinates to view recent temperature and rainfall data.</p>
+<div class="grid">
+<div><label id="latLabel" for="lat">Latitude</label><input id="lat" type="number" step="any" value="10.8505"></div>
+<div><label id="lonLabel" for="lon">Longitude</label><input id="lon" type="number" step="any" value="76.2711"></div>
+</div>
+<button onclick="loadWeather()" id="weatherBtn">Get NASA weather data</button>
+<div id="weatherResult" class="result" aria-live="polite">Weather data will appear here.</div>
+<p class="muted"><small>Source: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a>. Data availability depends on the selected location and date range.</small></p>
+</section>
+<section class="card">
+<h2 id="farmTitle">Your farm details</h2>
+<div class="grid">
+<div><label id="soilLabel" for="soil">Soil type</label><select id="soil"><option>Laterite</option><option>Clay</option><option>Sandy</option><option>Loamy</option></select></div>
+<div><label id="waterLabel" for="water">Water availability</label><select id="water"><option>High</option><option>Medium</option><option>Low</option></select></div>
+<div><label id="priorityLabel" for="priority">Your priority</label><select id="priority"><option>Low water use</option><option>Soil health</option><option>Income diversity</option></select></div>
+<div><label id="cropLabel" for="crop">Current crop</label><select id="crop"><option>Rice</option><option>Coconut</option><option>Vegetables</option><option>Banana</option><option>Pulses</option></select></div>
+</div>
+<button onclick="suggest()" id="suggestBtn">Compare rotation ideas</button>
+<div id="suggestions" aria-live="polite"></div>
+</section>
+<section class="card">
+<h2 id="aboutTitle">About this prototype</h2>
+<p id="aboutText">FieldWise Kerala is a bilingual learning prototype. It combines NASA weather information with farmer-entered details to show illustrative crop-rotation options.</p>
+<p class="muted" id="warning">These are educational examples, not validated agronomic recommendations. Please confirm crop choices with your local Krishi Bhavan or agricultural officer.</p>
+</section>
+</main>
+<footer>Field Shift: Adapting Farms with NASA Data · FieldWise Kerala</footer>
+<script>
+const translations={
+en:{subtitle:"Explore crop rotation ideas using NASA Earth observation data",weatherTitle:"Local weather from NASA POWER",weatherIntro:"Enter your farm location coordinates to view recent temperature and rainfall data.",latLabel:"Latitude",lonLabel:"Longitude",weatherBtn:"Get NASA weather data",farmTitle:"Your farm details",soilLabel:"Soil type",waterLabel:"Water availability",priorityLabel:"Your priority",cropLabel:"Current crop",suggestBtn:"Compare rotation ideas",aboutTitle:"About this prototype",aboutText:"FieldWise Kerala is a bilingual learning prototype. It combines NASA weather information with farmer-entered details to show illustrative crop-rotation options.",warning:"These are educational examples, not validated agronomic recommendations. Please confirm crop choices with your local Krishi Bhavan or agricultural officer."},
+ml:{subtitle:"NASA ഭൂനിരീക്ഷണ വിവരങ്ങൾ ഉപയോഗിച്ച് വിളമാറ്റ രീതികൾ മനസ്സിലാക്കാം",weatherTitle:"NASA POWER കാലാവസ്ഥാ വിവരങ്ങൾ",weatherIntro:"താപനിലയും മഴയും അറിയാൻ കൃഷിയിടത്തിന്റെ അക്ഷാംശവും രേഖാംശവും നൽകുക.",latLabel:"അക്ഷാംശം (Latitude)",lonLabel:"രേഖാംശം (Longitude)",weatherBtn:"NASA കാലാവസ്ഥാ വിവരം നേടുക",farmTitle:"നിങ്ങളുടെ കൃഷിയിട വിവരങ്ങൾ",soilLabel:"മണ്ണിന്റെ തരം",waterLabel:"ജലലഭ്യത",priorityLabel:"നിങ്ങളുടെ മുൻഗണന",cropLabel:"ഇപ്പോഴത്തെ വിള",suggestBtn:"വിളമാറ്റ നിർദ്ദേശങ്ങൾ താരതമ്യം ചെയ്യുക",aboutTitle:"ഈ മാതൃകയെക്കുറിച്ച്",aboutText:"FieldWise Kerala ഒരു ദ്വിഭാഷാ മാതൃകയാണ്. NASA കാലാവസ്ഥാ വിവരങ്ങളും കർഷകൻ നൽകുന്ന വിവരങ്ങളും ഉപയോഗിച്ച് വിളമാറ്റത്തിനുള്ള ഉദാഹരണങ്ങൾ കാണിക്കുന്നു.",warning:"ഇവ പഠനത്തിനുള്ള ഉദാഹരണങ്ങൾ മാത്രമാണ്; കൃഷിക്ക് അനുയോജ്യമാണെന്ന് സ്ഥിരീകരിച്ച നിർദ്ദേശങ്ങളല്ല. വിള തിരഞ്ഞെടുക്കുന്നതിന് മുമ്പ് കൃഷിഭവനിലെ ഉദ്യോഗസ്ഥരോട് ചോദിക്കുക."}
+};
+function setLanguage(){let t=translations[document.getElementById('language').value];for(let id in t){let el=document.getElementById(id);if(el)el.textContent=t[id];}}
+async function loadWeather(){
+let lat=document.getElementById('lat').value,lon=document.getElementById('lon').value,out=document.getElementById('weatherResult');
+if(!lat||!lon){out.textContent="Please enter latitude and longitude.";return;}
+out.textContent="Loading NASA POWER data…";
+try{
+let end=new Date(),start=new Date();start.setDate(end.getDate()-7);
+let fmt=d=>d.toISOString().slice(0,10).replaceAll('-','');
+let url=`https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=${encodeURIComponent(lon)}&latitude=${encodeURIComponent(lat)}&start=${fmt(start)}&end=${fmt(end)}&format=JSON`;
+let r=await fetch(url);if(!r.ok)throw Error("NASA POWER request failed");let j=await r.json(),p=j.properties.parameter;
+let temps=Object.values(p.T2M).filter(v=>v!==-999),rain=Object.values(p.PRECTOTCORR).filter(v=>v!==-999);
+let avg=a=>a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):"No data";
+out.innerHTML=`<b>Average temperature:</b> ${avg(temps)} °C<br><b>Daily rainfall average:</b> ${avg(rain)} mm/day<br><small>Recent available daily data. Check NASA POWER for full details.</small>`;
+}catch(e){out.textContent="Could not load data right now. Please check the coordinates and internet connection, then try again.";}
+}
+function suggest(){
+let soil=document.getElementById('soil').value,water=document.getElementById('water').value,priority=document.getElementById('priority').value,crop=document.getElementById('crop').value;
+let ideas=[];
+if(water==="Low"||priority==="Low water use")ideas.push("Consider exploring a pulse crop such as cowpea or green gram in a suitable season.");
+if(priority==="Soil health"||soil==="Laterite")ideas.push("Consider a legume in the rotation to support soil cover and soil health.");
+if(priority==="Income diversity")ideas.push("Compare a short-duration vegetable or pulse crop with your current crop, based on local season and market.");
+if(!ideas.length)ideas.push("Compare a legume or suitable vegetable crop after your current crop, based on the local season and water supply.");
+document.getElementById('suggestions').innerHTML=`<div class="result"><b>Illustrative options for ${crop}:</b><ul>${ideas.map(x=>`<li>${x}</li>`).join('')}</ul><small>Soil: ${soil} · Water: ${water} · Priority: ${priority}</small></div>`;
+}
+</script>
+</body></html>
